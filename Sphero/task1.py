@@ -306,7 +306,7 @@ def main(toy_name=None, joystickID=0, playerID=1):
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
-        print("Usage: python script.py <toy_name> <joystickNumber 0-1> <player 1-5>")
+        print("Usage: python script.py <toy_name> <joystickNumber 0-1> <player 1-5> <mode race-steps-manual>")
         sys.exit(1)
     
     preprogrammed_path = None
