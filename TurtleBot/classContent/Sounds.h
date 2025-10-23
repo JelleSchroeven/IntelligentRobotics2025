@@ -34,3 +34,11 @@ void playPiratesTheme() {
   }
   noTone(BUZZER);
 }
+
+void warningBeep() {
+  for (int i = 0; i < 3; i++) {
+    tone(BUZZER, NOTE_A5, 200);
+    delay(3000);
+  }
+  noTone(BUZZER);
+}

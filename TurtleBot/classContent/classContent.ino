@@ -1,25 +1,19 @@
 #include "config.h"
 #include "pitches.h"
-#include "PlayPiratesTheme.h"
+#include "Sounds.h"
 #include "IMU_Read_RollPitchYaw.h"
-
-void warningBeep() {
-  for (int i = 0; i < 3; i++) {
-    tone(BUZZER, NOTE_A5, 200);
-    delay(3000);
-  }
-  noTone(BUZZER);
-}
 
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(BUZZER, OUTPUT);
   Serial.begin(115200);
+  Serial.println("launching IMU")
+  IMU.begin()
+  Serial.println("Playing start melody");
   playPiratesTheme();  // 🎶 speel bij opstart
-
-  IMU.begin();
   pinMode( led_pin, OUTPUT );
+  
+  pinMode(BUZZER, OUTPUT);
 }
 
 void loop() {
