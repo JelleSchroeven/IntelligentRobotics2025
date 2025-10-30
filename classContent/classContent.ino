@@ -15,7 +15,7 @@ void setup() {
   Serial.println("Launching IMU");
   IMU.begin();
   Serial.println("Playing start melody");
-  //playPiratesTheme();
+  playPiratesTheme();
   pinMode( led_pin, OUTPUT );
   
   
@@ -23,6 +23,12 @@ void setup() {
 
   if (dynamixelStarted == false) {
     Serial.println("Dynamixels not initiated.");
+  }
+
+  if(dynamixelStarted == true){
+    setMode(1,0);
+    setMode(2,0);
+    setVelocity(0,0);
   }
 
 }
@@ -51,23 +57,42 @@ void printIMU(){
 void loop() {
 
 
-    bool criticalVoltage = false;
+  bool criticalVoltage = false;
 
-    float voltage = getBatteryVoltage();
-    
-    // Controleer of er 60 seconden voorbij zijn sinds de laatste batterijcheck
-    if (millis() - lastBatteryCheck >= 60000) {
-        lastBatteryCheck = millis();           // Reset timer
-        criticalVoltage = checkCriticalBattery();  // Controleer opnieuw
-    }
+  float voltage = getBatteryVoltage();
+  
+  // Controleer of er 60 seconden voorbij zijn sinds de laatste batterijcheck
+  if (millis() - lastBatteryCheck >= 60000) {
+      lastBatteryCheck = millis();           // Reset timer
+      criticalVoltage = checkCriticalBattery();  // Controleer opnieuw
+  }
 
-    if (dynamixelStarted == false) {
-      Serial.println("Problems with dynamixels");
-      delay(1000);
-    }
+  if (dynamixelStarted == false) {
+    Serial.println("Problems with dynamixels");
+    delay(1000);
+  }
 
-    printIMU();
-    Serial.println("Voltage: " + String(voltage) + " V");
+  printIMU();
+  Serial.println("Voltage: " + String(voltage) + " V");
 
-    delay(1000);  
+
+
+  //drive(50,50,5);
+  //turn(90);
+  //delay(1000);
+  //turn(-90);
+
+  bool SW1State = getSW1State();
+  bool SW2State = getSW2State();
+  Serial.println("states SW1 en SW2 "+ String(SW1State) + "/" + String(SW2State));
+
+  if(SW1State == 1){
+    turn(90);
+    Serial.println("left");
+  }
+ if(SW2State == 1){
+    turn(-90);
+    Serial.println("right");
+  }
+  delay(1000);  
 }
