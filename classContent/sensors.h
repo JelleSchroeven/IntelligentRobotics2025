@@ -30,18 +30,20 @@ float getYaw(){
 }
 
 bool getSW1State(){
-  //pin 34
+  // SW1 = 34
   int buttonState = digitalRead(34);
   return (buttonState);
 }
 
 bool getSW2State(){
-  //pin 35
+  // SW1 = 35
   int buttonState = digitalRead(35);
   return (buttonState);
 }
 
-float getBatteryVoltage(void) {
+
+
+float getBatteryVoltage() {
   int raw = analogRead(BDPIN_BAT_PWR_ADC);
   float voltage = (float)raw / 56.01; // spanningsdeler x11
   return voltage;
