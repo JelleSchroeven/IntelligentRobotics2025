@@ -28,7 +28,7 @@
 
 DynamixelWorkbench dxl_wb;
 
-int maxSpeed = 100;
+int maxSpeed = 200;
 
 bool checkDynamixel() 
 {
@@ -115,31 +115,34 @@ bool drive(int vel1, int vel2, int duration) {
   return true;
 }
 
-bool turn(float degrees = 0.0){
-  float currentYaw = getYaw();
-  float initialYaw = currentYaw;
-  float goalYaw = initialYaw + degrees ;
-  Serial.println();
-  Serial.println("turning");
-  
-  if(goalYaw > 0){
-    setVelocity(50,-50);
-    while(currentYaw <= goalYaw){
-      currentYaw =  getYaw();
-      delay(20);
-    }
-    setVelocity(0,0);
-    return true;
-  }
-  if(goalYaw < 0){
-    setVelocity(-50,50);
-    while(currentYaw >= goalYaw){
-      currentYaw =  getYaw();
-      delay(20);
-    }
-    setVelocity(0,0);
-    return true;
-  }
-  
-}
 
+bool turn(float degrees = 0.0) {
+
+  float currentYaw = getYaw();
+  float initialYaw = 0;
+
+  float goalYaw = initialYaw + degrees;
+
+  // turn CW
+  if (goalYaw > 0) {
+    setVelocity(50,-50);  
+    Serial.println("turn CW");
+    while (currentYaw <= goalYaw) {
+      currentYaw = getYaw();
+      delay(20);
+    }
+    setVelocity(0,0);
+    return true;
+  }
+  //turn CCW 
+  if (goalYaw < 0) {
+    setVelocity(-50,-50);  
+    Serial.println("turn CCW");
+    while (currentYaw >= goalYaw) {
+      currentYaw = getYaw();
+      delay(20);
+    }
+    setVelocity(0,0);
+    return true;
+  }
+}
