@@ -14,9 +14,12 @@ class BatterySubscriber(Node):
 
     def battery_callback(self, msg):
         voltage = msg.data
-        self.get_logger().info(f'Battery voltage: {voltage:.2f}V')
-        if voltage < 11.5:
-            self.get_logger().warn('Battery voltage low recharge ASAP.')
+        if voltage == -1.0:
+            self.get_logger().warn('No battery voltage received.')
+        else:
+            self.get_logger().info(f'Battery voltage: {voltage:.2f}V')
+            if voltage < 11.5:
+                self.get_logger().warn('Battery voltage low recharge ASAP.')
 
 def main(args=None):
         rclpy.init(args=args)
