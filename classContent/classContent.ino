@@ -111,6 +111,13 @@ void loop() {
     int velocity = true;
 
     float voltage = getBatteryVoltage();
+    static unsigned long lastVoltageSend = 0;
+
+    // Stuur elke 60 seconden de batterijspanning via serial
+    if (millis() - lastVoltageSend >= 60000) {
+        lastVoltageSend = millis();           // Reset timer
+        Serial.println(voltage);
+    }
     
     // Controleer of er 60 seconden voorbij zijn sinds de laatste batterijcheck
     if (millis() - lastBatteryCheck >= 60000) {
