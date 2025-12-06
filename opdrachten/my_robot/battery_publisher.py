@@ -5,16 +5,17 @@ import serial
 
 class BatteryPublisher(Node):
     def __init__(self):
+        super().__init__('battery_publisher')
 
         try: 
-            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
+            self.ser = serial.Serial('/dev/ttyACM0', 115200)
             self.get_logger().info('Serial connection established on /dev/ttyUSB0')
         except Exception as e:
             self.get_logger().error(f'Failed to connect to serial port: {e}')
             raise
     
         self.publisher = self.create_publisher(Float32, 'battery_percentage', 10)   
-        self.timer = self.create_timer(0.5, self.timer_callback)
+        self.timer = self.create_timer(0.5, self.read_battery_voltage)
     
     def read_battery_voltage(self):
         try:
