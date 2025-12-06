@@ -33,13 +33,13 @@ class BatteryPublisher(Node):
         except Exception as e:
             self.get_logger().error(f'Error reading battery voltage: {e}')
     
-    def main(args=None):
+def main(args=None):
         rclpy.init(args=args)
         battery_publisher = BatteryPublisher()
         rclpy.spin(battery_publisher)
         battery_publisher.destroy_node()
         rclpy.shutdown()
 
-    if __name__ == '__main__':
+if __name__ == '__main__':
         main()
         

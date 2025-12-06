@@ -18,12 +18,12 @@ class BatterySubscriber(Node):
         if voltage < 11.5:
             self.get_logger().warn('Battery voltage low recharge ASAP.')
     
-    def main(args=None):
+def main(args=None):
         rclpy.init(args=args)
         battery_subscriber = BatterySubscriber()
         rclpy.spin(battery_subscriber)
         battery_subscriber.destroy_node()
         rclpy.shutdown()
     
-    if __name__ == '__main__':
+if __name__ == '__main__':
         main()
