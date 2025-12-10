@@ -29,6 +29,7 @@ class KeyboardPublisher:
             key = ''
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
         return key
+    
     def _loop(self):
         try:
             while rclpy.ok() and self.running:
@@ -37,6 +38,13 @@ class KeyboardPublisher:
                     time.sleep(0.1)
                     continue
                 if key == '\x03':  # Ctrl-C
+                    self.get.logger().info('shutdown request door Ctrl-C')
+                    stop_msg = String()
+                    stop_msg.data = 'STOP'
+                    try:
+                        self.pub.publish(stop_msg)
+                    except Exception as e:
+                        self.get_logger().error(f'Fout bij verzenden stop bericht: {e}')
                     break
                 msg = String()
                 msg.data = key
