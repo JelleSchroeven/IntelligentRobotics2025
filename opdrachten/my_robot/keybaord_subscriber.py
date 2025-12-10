@@ -82,7 +82,7 @@ class KeyboardSubscriber(Node):
             self._stop_motors()
         else: 
             # key niet herkent
-            self.get_logger().info(f'Onbekende toets: {key}')
+            self.get_logger().info(f'Onbekende key: {key}')
     
     def _move_forward(self):
         left_motor_speed = int(self.drive_speed)
