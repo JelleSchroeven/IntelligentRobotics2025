@@ -44,7 +44,7 @@ class KeyboardPublisher:
                 self.get_logger().info(f'Key pressed: {key}')
         finally:
             stop_msg = String()
-            stop_msg.data = 'programma gestopt'
+            stop_msg.data = 'STOP'
             try:
                 self.pub.publish(stop_msg)
             except Exception as e:
