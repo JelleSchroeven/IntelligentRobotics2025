@@ -29,9 +29,9 @@ class KeyboardSubscriber(Node):
         self.ser = None
 
         #snelheid instellingen
-        self.drive_speed = 50
-        self.turn_speed = 40
-        self.duratie = 0.5  # seconden
+        left_motor_speed = 50
+        right_motor_speed = 50
+        
 
         self._init_hardware()
 
@@ -85,32 +85,32 @@ class KeyboardSubscriber(Node):
             self.get_logger().info(f'Onbekende key: {key}')
     
     def _move_forward(self):
-        left_motor_speed = int(self.drive_speed)
-        right_motor_speed = int(self.drive_speed)
-        cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
+        left_motor_speed += 5
+        right_motor_speed += 5
+        cmd = f'V {left_motor_speed} {right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot beweegt vooruit voor {self.duratie} seconden')
     
     def _move_backward(self):
-        left_motor_speed = int(self.drive_speed)
-        right_motor_speed = int(self.drive_speed)
-        cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
+        left_motor_speed -= 5 
+        right_motor_speed -= 5
+        cmd = f'DV {left_motor_speed} {right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot beweegt achteruit voor {self.duratie} seconden')
 
     def _turn_left(self):
-        left_motor_speed = int(self.turn_speed)
-        right_motor_speed = int(self.turn_speed)
-        cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
+        left_motor_speed -= 5
+        right_motor_speed += 5
+        cmd = f'V {left_motor_speed} {right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot draait naar links')
 
     def _turn_right(self):
-        self.get_logger().info('Robot draait naar rechts')
-        left_motor_speed = int(self.turn_speed)
-        right_motor_speed = int(self.turn_speed)
-        cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
+        left_motor_speed += 5
+        right_motor_speed -= 5
+        cmd = f'V {left_motor_speed} {right_motor_speed}'
         self._send_serial(cmd)
+        self.get_logger().info('Robot draait naar rechts')
 
     def _stop_motors(self):
         cmd = f'V 0 0'
