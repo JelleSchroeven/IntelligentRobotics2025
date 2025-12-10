@@ -78,6 +78,8 @@ class KeyboardSubscriber(Node):
             self._turn_left()
         elif key == 'e':
             self._turn_right()
+        elif key == 'x':
+            self._stop_motors()
         elif key == 'STOP':
             self._stop_motors()
         else: 
@@ -142,7 +144,7 @@ def main(args=None):
         pass
     finally:
         try:
-            Node.destroy_node()
+            node.destroy_node()
         except Exception as e:
             pass
         rclpy.shutdown()
