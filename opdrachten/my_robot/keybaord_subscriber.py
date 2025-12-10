@@ -144,7 +144,7 @@ def main(args=None):
         pass
     finally:
         try:
-            Node.destroy_node()
+            node.destroy_node()
         except Exception as e:
             pass
         rclpy.shutdown()
