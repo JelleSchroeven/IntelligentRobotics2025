@@ -78,6 +78,8 @@ class KeyboardSubscriber(Node):
             self._turn_left()
         elif key == 'e':
             self._turn_right()
+        elif key == 'x':
+            self._stop_motors()
         elif key == 'STOP':
             self._stop_motors()
         else: 
