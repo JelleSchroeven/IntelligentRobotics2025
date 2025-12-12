@@ -9,7 +9,7 @@ class BatteryPublisher(Node):
 
         try: 
             self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
-            self.get_logger().info('Serial connection established on /dev/ttyUSB0')
+            self.get_logger().info('Serial connection established on /dev/tty<ACM0')
         except Exception as e:
             self.get_logger().error(f'Failed to connect to serial port: {e}')
             raise
@@ -21,22 +21,30 @@ class BatteryPublisher(Node):
     def read_battery_voltage(self):
         msg = Float32()
         try:
+            self.ser.write(b'B\n')
+        
             line = self.ser.readline().decode('utf-8').strip()
             if not line:
                 self.get_logger().warn('Geen voltage ontvangen van serial')
                 msg.data = -1.0
+            elif line.startswith("BatteryVoltage:"):
+                try:
+                    raw = line.split(":")[1].split(" ")[0]
+                    voltage = float(raw)
+                    msg.data = voltage
+                    self.get_logger().info(f'Published battery voltage: {voltage:.2f}V')
+                except Exception as e:
+                    self.get_logger().warn(f'Kon voltage niet parsen uit "{line}": {e}')
+                    msg.data = -1.0
             else:
-                voltage = float(line)
-                msg.data = voltage
-                self.get_logger().info(f'Published battery voltage: {voltage:.2f}V')
-        except ValueError as e:
-            self.get_logger().error(f'Invalid data received from serial: {e}')
-            msg.data = -1.0
+                self.get_logger().warn(f'Ongeldige respons: "{line}"')
+                msg.data = -1.0
         except Exception as e:
             self.get_logger().error(f'Error reading battery voltage: {e}')
             msg.data = -1.0
 
         self.publisher.publish(msg)
+
 
 
 def main(args=None):

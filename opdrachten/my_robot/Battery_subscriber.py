@@ -15,7 +15,7 @@ class BatterySubscriber(Node):
     def battery_callback(self, msg):
         voltage = msg.data
         if voltage == -1.0:
-            self.get_logger().warn('No battery voltage received.')
+            self.get_logger().warn('No battery voltage received')
         else:
             self.get_logger().info(f'Battery voltage: {voltage:.2f}V')
             if voltage < 11.5:
