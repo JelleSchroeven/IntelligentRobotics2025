@@ -29,8 +29,8 @@ class KeyboardSubscriber(Node):
         self.ser = None
 
         #snelheid instellingen
-        left_motor_speed = 50
-        right_motor_speed = 50
+        self.left_motor_speed = -50
+        self.right_motor_speed = -50
         
 
         self._init_hardware()
@@ -44,7 +44,7 @@ class KeyboardSubscriber(Node):
             time.sleep(2)  # wacht op seriële verbinding
             self.get_logger().info(f'Seriële verbonde op {self.serial_port} met baud {self.baud}')
 
-            self._send_serial('V 0 0') #motren op0 bij start
+            self._send_serial('V 50 50') #motren op0 bij start
         except Exception as e:
             self.ser = None
             self.get_logger().error(f'Fout bij seriële verbinding: {e}')
@@ -87,30 +87,30 @@ class KeyboardSubscriber(Node):
             self.get_logger().info(f'Onbekende key: {key}')
     
     def _move_forward(self):
-        left_motor_speed += 5
-        right_motor_speed += 5
-        cmd = f'V {left_motor_speed} {right_motor_speed}'
+        self.left_motor_speed -= 5
+        self.right_motor_speed -= 5
+        cmd = f'V {self.left_motor_speed} {self.right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot beweegt vooruit voor {self.duratie} seconden')
     
     def _move_backward(self):
-        left_motor_speed -= 5 
-        right_motor_speed -= 5
-        cmd = f'DV {left_motor_speed} {right_motor_speed}'
+        self.left_motor_speed += 5 
+        self.right_motor_speed += 5
+        cmd = f'V {self.left_motor_speed} {self.right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot beweegt achteruit voor {self.duratie} seconden')
 
     def _turn_left(self):
-        left_motor_speed -= 5
-        right_motor_speed += 5
-        cmd = f'V {left_motor_speed} {right_motor_speed}'
+        self.left_motor_speed += 5
+        self.right_motor_speed -= 5
+        cmd = f'V {self.left_motor_speed} {self.right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot draait naar links')
 
     def _turn_right(self):
-        left_motor_speed += 5
-        right_motor_speed -= 5
-        cmd = f'V {left_motor_speed} {right_motor_speed}'
+        self.left_motor_speed -= 5
+        self.right_motor_speed += 5
+        cmd = f'V {self.left_motor_speed} {self.right_motor_speed}'
         self._send_serial(cmd)
         self.get_logger().info('Robot draait naar rechts')
 
@@ -123,7 +123,7 @@ class KeyboardSubscriber(Node):
     def destroy_node(self):
         try:
             self.get_logger().info('Keyboard subscriber wordt afgesloten.')
-            self.send_serial('V 0 0')  # stop motors
+            self._stop_motors()
             if self.ser:
                 try:
                     self.ser.close()
@@ -141,10 +141,11 @@ def main(args=None):
     try:
         rclpy.spin(keyboard_subscriber)
     except KeyboardInterrupt:
-        pass
+        keyboard_subscriber.get_logger().info('Keyboard subscriber wordt afgesloten door KeyboardInterrupt.')
+        keyboard_subscriber._stop_motors()
     finally:
-        try:
-            Node.destroy_node()
-        except Exception as e:
-            pass
+        keyboard_subscriber.destroy_node()
         rclpy.shutdown()
+
+if __name__ == '__main__':
+        main()

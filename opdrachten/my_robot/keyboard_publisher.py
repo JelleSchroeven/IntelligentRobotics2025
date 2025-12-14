@@ -9,7 +9,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 
-class KeyboardPublisher:
+class KeyboardPublisher(Node):
     def __init__(self, topic_name='keyboard_input'):
         super().__init__('keyboard_publisher')
         
@@ -38,7 +38,7 @@ class KeyboardPublisher:
                     time.sleep(0.1)
                     continue
                 if key == '\x03':  # Ctrl-C
-                    self.get.logger().info('shutdown request door Ctrl-C')
+                    self.get_logger().info('shutdown request door Ctrl-C')
                     stop_msg = String()
                     stop_msg.data = 'STOP'
                     try:
@@ -66,10 +66,7 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-        try:
-            Node.destroy_node()
-        except Exception as e:
-            pass
+        keyboard_publisher.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

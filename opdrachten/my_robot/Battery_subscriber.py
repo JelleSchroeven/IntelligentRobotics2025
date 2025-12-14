@@ -7,14 +7,14 @@ class BatterySubscriber(Node):
         super().__init__('battery_subscriber')
         self.subscription = self.create_subscription(
             Float32,
-            'battery_voltage',
+            'battery_Voltage',
             self.battery_callback,
             10)
         self.subscription
 
     def battery_callback(self, msg):
         voltage = msg.data
-        if voltage == -1.0:
+        if voltage < 0:
             self.get_logger().warn('No battery voltage received')
         else:
             self.get_logger().info(f'Battery voltage: {voltage:.2f}V')
@@ -22,9 +22,13 @@ class BatterySubscriber(Node):
                 self.get_logger().warn('Battery voltage low recharge ASAP.')
 
 def main(args=None):
-        rclpy.init(args=args)
-        battery_subscriber = BatterySubscriber()
+    rclpy.init(args=args)
+    battery_subscriber = BatterySubscriber()
+    try:
         rclpy.spin(battery_subscriber)
+    except KeyboardInterrupt:
+        battery_subscriber.get_logger().info('subscriber afgesloten')
+    finally:
         battery_subscriber.destroy_node()
         rclpy.shutdown()
 

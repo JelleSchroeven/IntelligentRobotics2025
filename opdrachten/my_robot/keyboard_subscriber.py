@@ -31,7 +31,7 @@ class KeyboardSubscriber(Node):
         #snelheid instellingen
         self.drive_speed = 50
         self.turn_speed = 40
-        self.duratie = 0.5  # seconden
+        self.duratie = 0.5 
 
         self._init_hardware()
 
@@ -41,7 +41,7 @@ class KeyboardSubscriber(Node):
             return
         try:
             self.ser = serial.Serial(self.serial_port, self.baud, timeout=1)
-            time.sleep(2)  # wacht op seriële verbinding
+            time.sleep(2)  # wacht op seriële
             self.get_logger().info(f'Seriële verbonde op {self.serial_port} met baud {self.baud}')
 
             self._send_serial('V 0 0') #motren op0 bij start
@@ -91,26 +91,26 @@ class KeyboardSubscriber(Node):
         right_motor_speed = int(self.drive_speed)
         cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
         self._send_serial(cmd)
-        self.get_logger().info('Robot beweegt vooruit voor {self.duratie} seconden')
+        self.get_logger().info(f'Robot beweegt vooruit voor {self.duratie} seconden')
     
     def _move_backward(self):
-        left_motor_speed = int(self.drive_speed)
-        right_motor_speed = int(self.drive_speed)
+        left_motor_speed = -int(self.drive_speed)
+        right_motor_speed = -int(self.drive_speed)
         cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
         self._send_serial(cmd)
-        self.get_logger().info('Robot beweegt achteruit voor {self.duratie} seconden')
+        self.get_logger().info(f'Robot beweegt achteruit voor {self.duratie} seconden')
 
     def _turn_left(self):
-        left_motor_speed = int(self.turn_speed)
+        left_motor_speed = -int(self.turn_speed)
         right_motor_speed = int(self.turn_speed)
         cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
         self._send_serial(cmd)
-        self.get_logger().info('Robot draait naar links')
+        self.get_logger().info(f'Robot draait naar links')
 
     def _turn_right(self):
         self.get_logger().info('Robot draait naar rechts')
         left_motor_speed = int(self.turn_speed)
-        right_motor_speed = int(self.turn_speed)
+        right_motor_speed = -int(self.turn_speed)
         cmd = f'D {left_motor_speed} {right_motor_speed} {self.duratie}'
         self._send_serial(cmd)
 
@@ -148,3 +148,6 @@ def main(args=None):
         except Exception as e:
             pass
         rclpy.shutdown()
+
+if __name__ == '__main__':
+        main()
